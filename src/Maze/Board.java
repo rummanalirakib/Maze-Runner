@@ -13,7 +13,7 @@ public class Board extends JPanel implements ActionListener{
 	 private String Message = "";
 	 
 	 private Font font = new Font("Serif", Font.BOLD, 48);
-	 private Font font1 = new Font("Serif", Font.BOLD, 20);
+	 private Font textFont = new Font("Serif", Font.BOLD, 20);
 	 private boolean win = false;
 	 private boolean noPath = false;
 	 private int totalTreasure = 0;
@@ -59,7 +59,7 @@ public class Board extends JPanel implements ActionListener{
 			}
 			g.drawImage(character.getPlayer(), character.getTileX() * 32, character.getTileY() * 32, null);
 			g.setColor(Color.BLUE);
-			g.setFont(font1);
+			g.setFont(textFont);
 			g.drawString("Treasure Collected: " + totalTreasure, 960, 500);
 		}
 		

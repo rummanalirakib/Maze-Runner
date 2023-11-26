@@ -7,7 +7,7 @@ import javax.swing.*;
 public class Maze {
    public static void main(String[] args) {
 	   File MazeCreate = new File("MazePathCreate.exe");
-	   File MazePathCreate = new File("MazerPathResulttoallAStar.exe");
+	   File MazePathCreate = new File("MazerPathResulttoallAStarAdvanced.exe");
 	   try {
 		 Desktop.getDesktop().open(MazeCreate);
 		 Desktop.getDesktop().open(MazePathCreate);
