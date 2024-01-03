@@ -24,8 +24,11 @@ int main()
     int x=rand()%30, n=v.size();
     for(int i=0;i<max(x,10);i++){
         int p=rand()%n;
-        str[v[p].first][v[p].second]='d';
+        if(p%3==0) str[v[p].first][v[p].second]='k';
+        else if(p%3==1) str[v[p].first][v[p].second]='s';
+        else str[v[p].first][v[p].second]='d';
     }
+    str[1][1]='g';
     str[28][28]='f';
     std::ofstream outputFile("Maze Paths//NewMaze.txt");
 

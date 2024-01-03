@@ -6,9 +6,6 @@ struct maze {
     int diffx;
     int diffy;
     int parent;
-    double distance;
-
-    bool operator < ( const maze& p ) const {  return distance > p.distance;   }
 };
 string str[30];
 vector<maze>v[100000];
@@ -46,28 +43,27 @@ void printPath(int indx)
    }
 }
 
-bool AStarSearch(int prevX, int prevY, int nextX, int nextY)
+bool BFSSearch(int prevX, int prevY, int nextX, int nextY)
 {
     for(int i=0;i<100000;i++) v[i].clear();
-    priority_queue<maze>q;
+    queue<maze>q;
     memset(visited, 0, sizeof(visited));
     maze mz;
     mz.x=prevX;
     mz.y=prevY;
     mz.parent=-1;
-    mz.distance=heuristic(mz.x, mz.y, nextX, nextY);
     q.push(mz);
     memset(visited, 0,sizeof(visited));
     while(!q.empty()){
-        maze var=q.top();
+        maze var=q.front();
         q.pop();
 
         if(var.x<0 || var.y<0 || var.x>28 || var.y>28){
             continue;
         }
         if(checkSituation(var)) continue;
-        count1++;
         visited[var.x][var.y]=1;
+        count1++;
         if(var.x==nextX && var.y==nextY){
             v[indx].push_back(var);
             printPath(indx);
@@ -83,7 +79,6 @@ bool AStarSearch(int prevX, int prevY, int nextX, int nextY)
             m.diffy=dy[k];
             if(m.x>=0 && m.x<=28 && m.y>=0 && m.y<=28){
                 if(str[m.x][m.y]=='g' || str[m.x][m.y]=='f' || str[m.x][m.y]=='d' || str[m.x][m.y]=='s' || str[m.x][m.y]=='k'){
-                    m.distance=heuristic(m.x, m.y, nextX, nextY);
                     q.push(m);
                 }
             }
@@ -156,12 +151,14 @@ int main()
     MakeClosestNodesList(1, 1);
     needsVisit.push_back(make_pair(28, 28));
     int prevX=1, prevY=1;
+    finalPath.push_back(make_pair(1,1));
     for(int i=0;i<needsVisit.size();i++){
-        if(checkWithPrevious(needsVisit[i].first, needsVisit[i].second) && AStarSearch(prevX, prevY, needsVisit[i].first, needsVisit[i].second)){
+        if(checkWithPrevious(needsVisit[i].first, needsVisit[i].second) && BFSSearch(prevX, prevY, needsVisit[i].first, needsVisit[i].second)){
             prevX=needsVisit[i].first;
             prevY=needsVisit[i].second;
         }
     }
+    finalPath.push_back(make_pair(28,28));
     if(prevX==28 && prevY==28) SaveToFile(1);
     else SaveToFile(0);
 }

@@ -13,7 +13,7 @@ struct maze {
 string str[30];
 vector<maze>v[10000];
 vector<pair<int,int>>finalPath;
-int visited[35][35], indx=0;
+int visited[35][35], indx=0, count1=0;
 int dx[4] = {-1, 1, 0, 0};
 int dy[4] = {0, 0, -1, 1};
 bool checkSituation(maze var)
@@ -55,6 +55,7 @@ void AStarSearch()
             continue;
         }
         if(checkSituation(var)) continue;
+        count1++;
         visited[var.x][var.y]=1;
         if(var.x==28 && var.y==28){
             v[indx].push_back(var);
@@ -70,7 +71,7 @@ void AStarSearch()
             m.diffx=dx[k];
             m.diffy=dy[k];
             if(m.x>=0 && m.x<=28 && m.y>=0 && m.y<=28){
-                if(str[m.x][m.y]=='g' || str[m.x][m.y]=='f' || str[m.x][m.y]=='d'){
+                if(str[m.x][m.y]=='g' || str[m.x][m.y]=='f' || str[m.x][m.y]=='d' || str[m.x][m.y]=='s' || str[m.x][m.y]=='k'){
                     m.distance=heuristic(m.x, m.y);
                     q.push(m);
                 }
@@ -106,6 +107,7 @@ void SaveToFile()
     for(int i=0;i<finalPath.size();i++){
      outputFile << finalPath[i].first <<" "<< finalPath[i].second << std::endl;
     }
+    outputFile << "Expansion " <<count1 << std::endl;
     outputFile.close();
 }
 

@@ -12,10 +12,11 @@ public class Map {
     
 	private Scanner m, mPath;
 	private String Map[] = new String[35];
-	private Image grass, wall, finish, treasure;
+	private Image grass, wall, finish, goldTreasure, kohinoorTreasure, stoneTreasure;
 	private String MapPath[] = new String[100000];
 	List<int[]> valuesList = new ArrayList<>();
 	char[][] finalMap = new char[35][35];
+	private int expnadedNodes;
 	
 	public Map() {
 		ImageIcon img = new ImageIcon("Photos\\grass.jpeg");
@@ -24,8 +25,12 @@ public class Map {
 		wall = img.getImage();
 		img = new ImageIcon("Photos\\finishline.jpg");
 		finish = img.getImage();
-		img = new ImageIcon("Photos\\treasure.png");
-		treasure = img.getImage();
+		img = new ImageIcon("Photos\\treasure.jpeg");
+		goldTreasure = img.getImage();
+		img = new ImageIcon("Photos\\kohinoor.jpg");
+		kohinoorTreasure = img.getImage();
+		img = new ImageIcon("Photos\\stones.jpg");
+		stoneTreasure = img.getImage();
 		openFile();
 		readFile();
 		closeFile();
@@ -43,8 +48,16 @@ public class Map {
 		return finish;
 	}
 	
-	public Image getTreasure() {
-		return treasure;
+	public Image getGoldTreasure() {
+		return goldTreasure;
+	}
+	
+	public Image getKohinoorTreasure() {
+		return kohinoorTreasure;
+	}
+	
+	public Image getStoneTreasure() {
+		return stoneTreasure;
 	}
 	
 	public void setMapValue(int x, int y) {
@@ -81,7 +94,10 @@ public class Map {
             String line = mPath.nextLine();
 
             String[] values = line.split(" ");
-            if (values.length == 2) {
+            if(values[0].equals("Expansion")) {
+            	expnadedNodes =  Integer.parseInt(values[1]);
+            }
+            else if (values.length == 2) {
                 int value1 = Integer.parseInt(values[0]);
                 int value2 = Integer.parseInt(values[1]);
 
@@ -102,4 +118,11 @@ public class Map {
 		mPath.close();
 	}
 	
+	public int getTotalStepCount() {
+		return valuesList.size();
+	}
+	
+	public int getExpandedNodes() {
+		return expnadedNodes;
+	}
 }

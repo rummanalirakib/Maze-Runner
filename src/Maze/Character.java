@@ -31,7 +31,6 @@ public class Character {
 	}
 	
 	public void move(int x, int y) {
-
 		tileX = x;
 		tileY = y;
 	}

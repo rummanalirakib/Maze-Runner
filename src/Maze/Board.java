@@ -10,10 +10,10 @@ public class Board extends JPanel implements ActionListener{
 	 private Timer timer;
 	 private Map m;
 	 private Character character;
-	 private String Message = "";
+	 private String Message = "", toalTreasureMessage="0", totalStepCount="";
 	 
 	 private Font font = new Font("Serif", Font.BOLD, 48);
-	 private Font textFont = new Font("Serif", Font.BOLD, 20);
+	 private Font textFont = new Font("Serif", Font.BOLD, 28);
 	 private boolean win = false;
 	 private boolean noPath = false;
 	 private int totalTreasure = 0;
@@ -38,8 +38,8 @@ public class Board extends JPanel implements ActionListener{
 	public void paint(Graphics g) {
 		super.paint(g);
 		if(win==false) {
-			for(int y=0; y<30; y++) {
-				for(int x=0; x<30; x++) {
+			for(int x=0; x<30; x++) {
+				for(int y=0; y<30; y++) {
 					if(m.getMap(x, y)=='g') {
 						g.drawImage(m.getGrass(), x * 32, y * 32, null);
 					}
@@ -53,27 +53,41 @@ public class Board extends JPanel implements ActionListener{
 					}
 					
 					if(m.getMap(x, y)=='d') {
-						g.drawImage(m.getTreasure(), x * 32, y * 32, null);
+						g.drawImage(m.getGoldTreasure(), x * 32, y * 32, null);
+					}
+					
+					if(m.getMap(x, y)=='k') {
+						g.drawImage(m.getKohinoorTreasure(), x * 32, y * 32, null);
+					}
+					
+					if(m.getMap(x, y)=='s') {
+						g.drawImage(m.getStoneTreasure(), x * 32, y * 32, null);
 					}
 				}
 			}
 			g.drawImage(character.getPlayer(), character.getTileX() * 32, character.getTileY() * 32, null);
 			g.setColor(Color.BLUE);
 			g.setFont(textFont);
-			g.drawString("Treasure Collected: " + totalTreasure, 960, 500);
+			g.drawString("Collected Treasure Worth: " + toalTreasureMessage, 960, 500);
 		}
 		
 		if(win) {
 			g.setColor(Color.BLUE);
 			g.setFont(font);
-			g.drawString(Message, 250, 600);
-			g.drawString("Treasure Collected: " + totalTreasure, 360, 400);
+			int[] pair=centerAlignment(Message, g);
+	        g.drawString(Message, pair[0], pair[1]-400);
+	        pair=centerAlignment("Treasure Collected: " + toalTreasureMessage, g);
+			g.drawString("Treasure Collected: " + toalTreasureMessage, pair[0], pair[1]-200);
+			pair=centerAlignment(totalStepCount, g);
+			g.drawString(totalStepCount,  pair[0], pair[1]);
+			pair=centerAlignment("Total Expanded Nodes: " + m.getExpandedNodes(), g);
+			g.drawString("Total Expanded Nodes: " + m.getExpandedNodes(),  pair[0], pair[1]+200);
 		}
 		
 		if(noPath) {
 			g.setColor(Color.BLUE);
 			g.setFont(font);
-			g.drawString("Sorry the path does not exist which will lead to the goal", 50, 500);
+			g.drawString("Sorry the path does not exist which will lead to the goal", 50, 300);
 		}
 	}
 	
@@ -84,7 +98,7 @@ public class Board extends JPanel implements ActionListener{
 		    public AL() {
 		    	moveCounter = 0;
 		    	int[] indx = {0};
-		    	moveTimer = new Timer(300, new ActionListener() {
+		    	moveTimer = new Timer(100, new ActionListener() {
 		            @Override
 		            public void actionPerformed(ActionEvent e) {
 		            	int pair[] = valuesList.get(indx[0]);
@@ -99,13 +113,28 @@ public class Board extends JPanel implements ActionListener{
 		                	System.out.print("Goal Reached");
 		                	win=true;
 		                	Message = "Maze Runner Reached The Goal";
+		                	totalStepCount = "Total Step Count: " + String.valueOf(m.getTotalStepCount());
 		                	repaint();
 		                }
 		                
 		        		if(m.getMap(pair[0], pair[1])=='d'){
-		        			totalTreasure += 1;
+		        			totalTreasure += 5;
+		        			toalTreasureMessage = String.valueOf(totalTreasure) + "M USD";
 		        			m.setMapValue(character.getTileX(), character.getTileY());
 		        		}
+		        		
+						
+						if(m.getMap(pair[0], pair[1])=='k') {
+							totalTreasure += 30;
+							toalTreasureMessage = String.valueOf(totalTreasure) + "M USD";
+		        			m.setMapValue(character.getTileX(), character.getTileY());
+						}
+						
+						if(m.getMap(pair[0], pair[1])=='s') {
+							totalTreasure += 8;
+							toalTreasureMessage = String.valueOf(totalTreasure) + "M USD";
+		        			m.setMapValue(character.getTileX(), character.getTileY());
+						}
 		            }
 		        });
 		    	moveTimer.setRepeats(true);
@@ -134,5 +163,14 @@ public class Board extends JPanel implements ActionListener{
 		public void keyTyped(KeyEvent e) {
 			
 		}
+	}
+	
+	private int[] centerAlignment(String Message, Graphics g)
+	{
+		int[] pair = new int[2];
+		FontMetrics fm = g.getFontMetrics();
+        pair[0] = (getWidth() - fm.stringWidth(Message)) / 2;
+        pair[1] = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+        return pair;
 	}
 }
