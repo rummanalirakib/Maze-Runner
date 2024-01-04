@@ -12,17 +12,8 @@ import javax.swing.*;
 
 public class Maze implements ActionListener{
    public static void main(String[] args) {
-	   File MazeCreate = new File("MazePathCreate.exe");
-	   try {
-		 Desktop.getDesktop().open(MazeCreate);
-
 		 Maze m = new Maze();
-	   //  new Maze();
 		 m.InitialUIScreen();
-	   }
-	   catch(Exception ex) {
-		   System.out.println(ex);
-	   }
    }
    
    public void InitiateMaze() {
@@ -38,15 +29,52 @@ public class Maze implements ActionListener{
    public void InitialUIScreen() {
 	   JFrame f = new JFrame();
 	   
+	   JButton CreateNewMaze = new JButton("Create a New Maze");
+	   JButton AStartOnlybutton = new JButton("Start the Map With A* Search but only one final goal");
 	   JButton AStartbutton = new JButton("Start the Map With A* Search");
 	   JButton BFSbutton = new JButton("Start the Map With BFS Search");
 	   JButton DFSbutton = new JButton("Start the Map With DFS Search");
 	   
 	   // Set preferred size for the buttons
-       Dimension buttonSize = new Dimension(500, 50);
+       Dimension buttonSize = new Dimension(600, 350);
+       CreateNewMaze.setPreferredSize(buttonSize);
+       AStartOnlybutton.setPreferredSize(buttonSize);
        AStartbutton.setPreferredSize(buttonSize);
        BFSbutton.setPreferredSize(buttonSize);
        DFSbutton.setPreferredSize(buttonSize);
+       
+       CreateNewMaze.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               // Close the JFrame
+        	   try {
+	        	   File MazeCreate = new File("MazePathCreate.exe");
+	      		   Desktop.getDesktop().open(MazeCreate);
+	      		   Thread.sleep(2000);
+        	   }
+        	   catch(Exception ex) {
+        		   
+        	   }
+           }
+       });
+       
+       AStartOnlybutton.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               // Close the JFrame
+        	   try {
+	        	   File MazePathCreate = new File("MazePathResultAStar.exe");
+	      		   Desktop.getDesktop().open(MazePathCreate);
+	      		   Thread.sleep(2000);
+        	   }
+        	   catch(Exception ex) {
+        		   
+        	   }
+               f.dispose();
+               Maze m = new Maze();
+               m.InitiateMaze();
+           }
+       });
 	   
 	   AStartbutton.addActionListener(new ActionListener() {
            @Override
@@ -112,6 +140,10 @@ public class Maze implements ActionListener{
 
        // Add buttons with a vertical strut for the gap
        int verticalGap = 10;
+       panel.add(CreateNewMaze);
+       panel.add(Box.createVerticalStrut(verticalGap));
+       panel.add(AStartOnlybutton);
+       panel.add(Box.createVerticalStrut(verticalGap));
        panel.add(AStartbutton);
        panel.add(Box.createVerticalStrut(verticalGap));
        panel.add(BFSbutton);
@@ -123,7 +155,7 @@ public class Maze implements ActionListener{
 
 	   
 	   f.add(panel, BorderLayout.CENTER);
-	   f.setSize(400, 550);
+	   f.setSize(600, 750);
 	   f.setLocationRelativeTo(null);
 	   f.setVisible(true);
 	   f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
